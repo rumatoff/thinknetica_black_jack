@@ -1,1 +1,1 @@
-# thinknetica_black_jack
+# This is a Ruby Course Graduation Project
