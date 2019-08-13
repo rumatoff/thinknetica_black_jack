@@ -6,6 +6,7 @@ class Dealer < Gambler
   def initialize(bank = 100)
     @name = 'Dealer'
     @bank = bank.to_i
+    @hand ||= []
     validate!
   end
 end
