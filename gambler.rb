@@ -4,7 +4,7 @@ class Gambler
   include Validation
 
   attr_reader :name
-  attr_accessor :bank
+  attr_accessor :bank, :points
 
   validate :name, :presence
   validate :bank, :positive
