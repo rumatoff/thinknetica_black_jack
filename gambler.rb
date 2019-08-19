@@ -12,7 +12,6 @@ class Gambler
   def initialize(name, bank = 100)
     @name = name
     @bank = bank.to_i
-    @hand ||= []
     validate!
   end
 end

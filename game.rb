@@ -1,35 +1,50 @@
 # frozen_string_literal: true
 
-module Game
-  private
+class Game
+  BET = 10
 
-  def current_cards
-    player_count
-    dealer_count
-    puts "Карты дилера: #{@dealer.hand.count}, банк дилера: #{@dealer.bank}"
-    puts "Ваши карты: #{@player.hand.join(' ')}, сумма очков: #{@player_count}, ваш банк: #{@player.bank}"
+  def initialize(player, dealer, deck, interface)
+    @player = player
+    @dealer = dealer
+    @deck = deck
+    @interface = interface
+  end
+
+  def current_cards(hide = true)
+    args = {
+        dealer_hand: @dealer.hand.output(hide),
+        dealer_bank: @dealer.bank,
+        player_name: @player.name.capitalize,
+        player_hand: @player.hand.output,
+        player_count: @player.hand.count,
+        player_bank: @player.bank
+    }
+    @interface.current_card_text(args)
   end
 
   def dealer_need_card?
-    @dealer_count + Score.counter([] << @deck.current_deck.first) < 22
+    @dealer.hand.count < 17
   end
 
   def dealer_move
     if dealer_need_card?
-      puts 'Дилер берет карту'
-      @dealer.hand << @deck.next_card
+      @interface.dealer_move_text true
+      @deck.take_card(@dealer.hand)
     else
-      puts 'Дилер пропускает ход' unless dealer_need_card?
+      @interface.dealer_move_text unless dealer_need_card?
     end
   end
 
   def open_cards
-    dealer_count
-    player_count
-    puts "Карты дилера: #{@dealer.hand.join(' ')}, сумма очков: #{dealer_count}"
-    puts "Ваши карты: #{@player.hand.join(' ')}, сумма очков: #{player_count}"
+    args = {
+        dealer_hand: @dealer.hand.output,
+        dealer_count: @dealer.hand.count,
+        player_name: @player.name.capitalize,
+        player_hand: @player.hand.output,
+        player_count: @player.hand.count
+    }
+    @interface.open_cards_text(args)
     result
-    repeat
   end
 
   def result
@@ -42,64 +57,34 @@ module Game
     end
   end
 
-  def dealer_count
-    @dealer_count = Score.counter(@dealer.hand)
-  end
-
-  def player_count
-    @player_count = Score.counter(@player.hand)
-  end
-
-  def repeat
-    abort if @dealer.bank.zero? || @player.bank.zero?
-    print 'Повторить ? (y)'
-    if gets.chomp == 'y'
-      clear_hand
-      system 'cls'
-      start
-    else
-      abort
-    end
-  end
-
   def player_add_card
-    @player.hand << @deck.next_card
-  end
-
-  def game_menu_text
-    puts '1. Пропустить ход'
-    puts '2. Добавить карту'
-    puts '3. Открыть карты'
-    print 'Ваш выбор: '
-  end
-
-  def input_error
-    puts 'Повторите ввод'
-    game_menu
+    @deck.take_card(@player.hand)
   end
 
   def player_win?
-    player_count > dealer_count && player_count <= 21 || dealer_count > 21
+    player_score = @player.hand.count
+    dealer_score = @dealer.hand.count
+    player_score > dealer_score && player_score <= 21 || dealer_score > 21
   end
 
   def player_win
     @player.bank += self.class::BET * 2
-    puts "Вы выйграли! Ваш банк: #{@player.bank}, банк дилера: #{@dealer.bank}"
+    @interface.player_win_text(@player.bank, @dealer.bank)
   end
 
   def draw?
-    player_count == dealer_count
+    @player.hand.count == @dealer.hand.count
   end
 
   def draw
     @player.bank += self.class::BET
     @dealer.bank += self.class::BET
-    puts 'Ничья'
+    @interface.draw_text
   end
 
   def dealer_win
     @dealer.bank += self.class::BET * 2
-    puts "Вы проиграли. Ваш банк: #{@player.bank}, банк дилера: #{@dealer.bank}"
+    @interface.dealer_win_text(@player.bank, @dealer.bank)
   end
 
   def round_with_card
@@ -114,7 +99,7 @@ module Game
   end
 
   def clear_hand
-    @dealer.hand = []
-    @player.hand = []
+    @dealer.hand.cards = []
+    @player.hand.cards = []
   end
 end
