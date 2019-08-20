@@ -3,9 +3,6 @@
 class Deck
   attr_reader :cards
 
-  SUITS = %W[\u{2660} \u{2665} \u{2666} \u{2663}].freeze
-  BASE = %w[2 3 4 5 6 7 8 9 10 J Q K A].freeze
-
   def initialize
     new_deck!
   end
@@ -26,9 +23,9 @@ class Deck
 
   def new_deck!
     @cards ||= []
-    SUITS.each do |suit|
-      BASE.each do |value|
-        @cards << {"#{value}": suit}
+    Card::SUITS.each do |suit|
+      Card::BASE.each do |value|
+        @cards << { "#{value}": suit }
       end
     end
     @cards.shuffle!

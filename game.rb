@@ -22,6 +22,13 @@ class Game
     @interface.current_card_text(args)
   end
 
+  def clear_hand
+    @dealer.hand.cards = []
+    @player.hand.cards = []
+  end
+
+  private
+
   def dealer_need_card?
     @dealer.hand.count < 17
   end
@@ -37,11 +44,11 @@ class Game
 
   def open_cards
     args = {
-        dealer_hand: @dealer.hand.output,
-        dealer_count: @dealer.hand.count,
-        player_name: @player.name.capitalize,
-        player_hand: @player.hand.output,
-        player_count: @player.hand.count
+      dealer_hand: @dealer.hand.output,
+      dealer_count: @dealer.hand.count,
+      player_name: @player.name.capitalize,
+      player_hand: @player.hand.output,
+      player_count: @player.hand.count
     }
     @interface.open_cards_text(args)
     result
@@ -96,10 +103,5 @@ class Game
   def round_without_card
     dealer_move
     open_cards
-  end
-
-  def clear_hand
-    @dealer.hand.cards = []
-    @player.hand.cards = []
   end
 end

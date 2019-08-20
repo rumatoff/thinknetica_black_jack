@@ -23,23 +23,6 @@ class Interface
     GAME_MENU[input] ? select_game_menu.call : input_error(game)
   end
 
-  def game_menu_text
-    puts '1. Пропустить ход'
-    puts '2. Добавить карту'
-    puts '3. Открыть карты'
-    print 'Ваш выбор: '
-  end
-
-  def repeat?
-    print 'Повторить ? (y)'
-    gets.chomp == 'y'
-  end
-
-  def input_error(game)
-    puts 'Повторите ввод'
-    game_menu(game)
-  end
-
   def current_card_text(args)
     puts "Карты дилера: #{args[:dealer_hand]}, банк дилера: #{args[:dealer_bank]}"
     puts "Ваши карты, #{args[:player_name]}: #{args[:player_hand]}, сумма очков: #{args[:player_count]}, ваш банк: #{args[:player_bank]}"
@@ -68,5 +51,24 @@ class Interface
 
   def draw_text
     puts 'Ничья'
+  end
+
+  def repeat?
+    print 'Повторить ? (y)'
+    gets.chomp == 'y'
+  end
+
+  private
+
+  def game_menu_text
+    puts '1. Пропустить ход'
+    puts '2. Добавить карту'
+    puts '3. Открыть карты'
+    print 'Ваш выбор: '
+  end
+
+  def input_error(game)
+    puts 'Повторите ввод'
+    game_menu(game)
   end
 end

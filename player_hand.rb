@@ -1,4 +1,3 @@
 # frozen_string_literal: true
 
-class PlayerHand < Hand;
-end
+class PlayerHand < Hand; end

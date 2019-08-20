@@ -1,4 +1,3 @@
 # frozen_string_literal: true
 
-class DealerHand < Hand;
-end
+class DealerHand < Hand; end
